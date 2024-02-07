@@ -1,0 +1,8 @@
+-   id: is-dev-branch-updated
+    name: Is development branch updated
+    description: Check if development branch is updated, dev should pull code and complete update their branch before merging or push code.
+    entry: ./is_dev_branch_updated
+    language: script
+    pass_filenames: false
+    always_run: true
+    args: ['dev']
