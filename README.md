@@ -40,8 +40,11 @@ For example:
 
 ## Available Hooks
 ### 1. is-dev-branch-updated
-***Concept***: From [Short live feature branches](https://trunkbaseddevelopment.com/short-lived-feature-branches/), when multiple of developers work concurrently, **they have to merge updated main/trunk before merging back to main/trunk**  
+***Concept***: From [Short live feature branches](https://trunkbaseddevelopment.com/short-lived-feature-branches/), when many developers work concurrently, **they must merge updated main/trunk before merging back to main/trunk**  
 ![process](https://trunkbaseddevelopment.com/short-lived-feature-branches/slfb_pull-push.png)  
-**Description**: This hook will recheck remote development branch if they are updated.
-If so, It will stop git action  
-**Recommended State**: pre-push, pre-merge, pre-rebase  (pre-commit is still ok, but may seem annoyed)
+(cr: [Trunk based development](https://trunkbaseddevelopment.com))  
+
+**Description**: This hook will recheck remote development branch if it has been updated.
+If so, It will stop the git action  
+
+**Recommended State**: pre-push, pre-merge, pre-rebase  (pre-commit is still acceptable, but it may appear annoying)
