@@ -1,0 +1,85 @@
+#! /bin/bash 
+DEFAULT_DAYS=3
+EXCLUDE_BRANCH="master"
+
+while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+        -d|--days) days="$2"; shift 2;;
+        -e|--exclude) exclude="$2"; shift 2 ;;
+        --) shift; break ;;
+        -*) echo "Unknown option: $1" >&2; exit 1 ;;
+        *) break ;; # End of options
+    esac
+done
+
+cutoff_day=${days:-$DEFAULT_DAYS}
+exclude=${exclude:-$EXCLUDE_BRANCH}
+
+# Get date in second
+# If argument is specified, use datetime from argument, otherwise current time
+function get_date() {
+  arg=${1:-""}
+
+  if [ "$arg" = "" ]
+  then
+    date +%s
+    return
+  fi
+
+  case "$OSTYPE" in
+  darwin*)
+    date -jf "%Y-%m-%d %H:%M:%S %z" "$arg" +%s
+    return
+    ;;
+  # keep ostype name for expansion
+  # cygwin* | msys* | win32*) ;;
+  *)
+    # Using linux date for default
+    date -d "$arg" +%s
+    ;;
+esac
+}
+
+
+# Check whether the branch is in excluded list,
+# which will be skipped for branch age checking
+function is_branch_excluded() {
+  branch=$1
+  excluded_list=$2
+
+  case " $excluded_list " in
+    *"$branch"*)
+        echo "skip $branch branch: found in excluded lists"
+        exit 0
+        ;;
+    *)
+        ;;
+  esac
+}
+
+# Main process
+function is_branch_too_old() {
+  # check current branch's name
+  current_branch=$(git rev-parse --abbrev-ref HEAD)
+  is_branch_excluded "$current_branch" "$2"
+  # get current datetime in unix time
+  current_date_in_secs=$(get_date)
+
+  # get first branching date with git reflog
+  branching_date=$(git reflog show --date=local --format=%ci "$current_branch" | tail -1)
+  branching_date_in_secs=$(get_date "$branching_date")
+
+  # Calculate difference in seconds and then convert to days
+  diff_sec=$((current_date_in_secs - branching_date_in_secs))
+  days_diff=$((diff_sec / 86400)) # 86400 seconds in a day
+
+  # Check if the days is over?
+  if [ $days_diff -gt "$1" ]
+  then
+    echo "This branch is older than 3 days"
+    return 1
+  fi
+  return 0
+}
+
+is_branch_too_old "$cutoff_day" "$exclude"
