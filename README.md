@@ -1,7 +1,7 @@
 # Dev Practice Hook
 
-Enforcing git hooks stuff, for better development routine.
-As [pre-commit](https://pre-commit.com) extension, you can easily integrate with other rules in order to make your team development routine become more consistent and minimize conflict effect.
+Enforcing git hooks for a better development workflow.  
+As [Pre-commit](https://pre-commit.com) plugin, you can easily combine with other rules to make your team development routine more consistent and reduce the conflict effect.
 
 ## Prerequisite
 1. [Pre-commit Hook](https://pre-commit.com)
@@ -21,10 +21,10 @@ Just test only in MacOS for now
         args: ['main']
 ```
 ### Argument
-The only one argument is branch name which should be your main development branch.
-_Default_: `dev`
-For example:
-- if your development branch is `main`, use
+The sole argument is branch name which should be your main development branch.  
+_Default_: `dev`  
+For example:  
+- if your development branch is `main`, use  
 ```yaml
   args: ['main']
 ```
@@ -40,8 +40,8 @@ For example:
 
 ## Available Hooks
 ### 1. is-dev-branch-updated
-***Concept***: From [Short live feature branches](https://trunkbaseddevelopment.com/short-lived-feature-branches/), when multiple of developers work concurrently, **they have to merge updated main/trunk before merging back to main/trunk**
-![process](https://trunkbaseddevelopment.com/short-lived-feature-branches/slfb_pull-push.png)
+***Concept***: From [Short live feature branches](https://trunkbaseddevelopment.com/short-lived-feature-branches/), when multiple of developers work concurrently, **they have to merge updated main/trunk before merging back to main/trunk**  
+![process](https://trunkbaseddevelopment.com/short-lived-feature-branches/slfb_pull-push.png)  
 **Description**: This hook will recheck remote development branch if they are updated.
-If so, It will stop git action
+If so, It will stop git action  
 **Recommended State**: pre-push, pre-merge, pre-rebase  (pre-commit is still ok, but may seem annoyed)
