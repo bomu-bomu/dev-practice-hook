@@ -1,18 +1,37 @@
 #! /bin/bash
 
+# Check whether git exist?
+if [ "$(which git)" = "" ]
+then
+  echo "git not found"
+  exit 1
+fi
+
 current_branch=$(git rev-parse --abbrev-ref HEAD)
 dev_branch=${1:-dev}
+
 function is_dev_branch_updated() {
   echo "Check whether ${dev_branch} is update: "
-  git fetch 
-  behind=$(git rev-list --count $dev_branch..origin/$dev_branch)
-  if [ $behind -gt 0 ]
+  git fetch
+  
+  # git rev-list --count will return commit difference between local and remote branch
+  # Caution: 
+  #   USE .. notation, NOT ...
+  #   ... will return absolute value 
+  #   which cannot be determined if it is ahead or behind
+  if ! behind=$(git rev-list --count "$dev_branch"..origin/"$dev_branch" 2>/dev/null);
+  then
+    echo "Cannot access branch ${dev_branch}: branch not exist or remote origin not set"
+    return 1
+  fi
+
+  if [ "$behind" -gt 0 ]
   then
     echo "Please update and merge ${dev_branch} --> ${current_branch} branch"
     echo "  before pushing to repository in order to prevent conflict"
-    echo "  \$git fetch"
-    echo "  \$git merge ${dev_branch}"
-    return -1
+    echo "  \$ git fetch"
+    echo "  \$ git merge ${dev_branch}"
+    return 1
   fi
   return 0
 }
