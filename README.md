@@ -15,7 +15,7 @@ Just test only in MacOS for now
 1. Just add this stuff into `.pre-commit-config.yaml`
 ```yaml
 -   repo: https://github.com/bomu-bomu/dev-practice-hook.git
-    rev: 4ce1faddb10c98fd0151f75d1688188845e66b70
+    rev: 0.0.1
     hooks:
     -   id: is-dev-branch-updated
         args: ['main']
