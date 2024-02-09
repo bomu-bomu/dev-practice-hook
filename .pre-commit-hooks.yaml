@@ -5,7 +5,6 @@
   language: script
   pass_filenames: false
   always_run: true
-
 - id: does-branch-last-too-long
   name: Does this branch last too long
   description: Check if this branch has been created longer than the threshold
